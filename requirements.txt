@@ -1,0 +1,29 @@
+# Database dependencies
+psycopg2-binary==2.9.10
+SQLAlchemy==2.0.41
+Flask-SQLAlchemy==3.1.1
+
+# Environment management
+python-dotenv==1.1.1
+
+# Web framework
+flask==3.1.1
+
+# NLP dependencies
+spacy==3.8.7
+
+# Data processing
+numpy==2.3.1
+
+# HTTP requests
+requests==2.32.4
+
+# Data validation
+pydantic==2.11.7
+
+# CLI and terminal output
+typer==0.16.0
+rich==14.0.0
+
+# Progress bars
+tqdm==4.67.1
