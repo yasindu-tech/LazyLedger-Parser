@@ -68,6 +68,6 @@ def parse_text():
 
     return jsonify(transactions), 200
 
-@app.route('/health', methods=['GET'])
+@parser.route('/health', methods=['GET'])
 def health():
     return {"status": "healthy"}, 200
