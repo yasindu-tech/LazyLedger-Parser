@@ -67,3 +67,7 @@ def parse_text():
             transactions.append(tx)
 
     return jsonify(transactions), 200
+
+@app.route('/health', methods=['GET'])
+def health():
+    return {"status": "healthy"}, 200
