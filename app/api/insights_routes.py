@@ -14,11 +14,11 @@ def get_insights(user_id):
         # Call the generate_insights function
         insights = generate_insights(user_id)
         
-        # Check if insights is an error string
-        if isinstance(insights, str):
+        # Check if insights is an error string (errors start with "Error")
+        if isinstance(insights, str) and insights.startswith("Error"):
             return jsonify({'error': insights}), 400
         
-        # Return the insights
+        # Return the insights (can be string content or dict)
         return jsonify({
             'userId': user_id,
             'insights': insights
