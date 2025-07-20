@@ -71,3 +71,4 @@ def parse_text():
 @parser.route('/health', methods=['GET'])
 def health():
     return {"status": "healthy"}, 200
+

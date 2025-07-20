@@ -18,7 +18,15 @@ def create_app():
     db.init_app(app)
 
     # Import and register the extraction blueprint
-    from .parser import parser as parser_blueprint
+    from .api.parser import parser as parser_blueprint
     app.register_blueprint(parser_blueprint)
+    
+    # Import and register the transactions blueprint
+    from .api.transactions import transactions_bp
+    app.register_blueprint(transactions_bp)
+    
+    # Import and register the insights blueprint
+    from .api.insights_routes import insights_bp
+    app.register_blueprint(insights_bp)
 
     return app

@@ -25,6 +25,12 @@ requests==2.32.4
 # Data validation
 pydantic==2.11.7
 
+# LangChain with free LLMs
+langchain-community>=0.0.10
+langchain-core>=0.1.0
+transformers>=4.30.0
+torch>=2.0.0
+
 # CLI and terminal output
 typer==0.16.0
 rich==14.0.0
