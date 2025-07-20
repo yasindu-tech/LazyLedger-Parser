@@ -7,16 +7,17 @@ llm = None
 
 # Option 1: Try Hugging Face Hub (free API)
 try:
-    from langchain_community.llms import HuggingFaceHub
+    from langchain_huggingface import HuggingFaceEndpoint
     
     hf_token = os.environ.get('HUGGINGFACE_API_TOKEN')
     if hf_token:
-        llm = HuggingFaceHub(
+        llm = HuggingFaceEndpoint(
             repo_id="microsoft/DialoGPT-medium",  # Free model
-            model_kwargs={"temperature": 0.7, "max_length": 512},
+            temperature=0.7,
+            max_length=512,
             huggingfacehub_api_token=hf_token
         )
-        print("Using Hugging Face Hub LLM")
+        print("Using Hugging Face Endpoint LLM")
 except Exception as e:
     print(f"Hugging Face Hub failed: {e}")
     llm = None
