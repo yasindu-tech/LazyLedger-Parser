@@ -1,0 +1,59 @@
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Git
+.git/
+.gitignore
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Development files
+.env
+.env.*
+!.env.example
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation and development files
+README.md
+*.md
+.github/
+
+# Test files
+tests/
+test_*
+*_test.py
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Local development files
+run_dev.py
+installed_packages.txt
+
+# Deployment configs (Railway will handle these)
+.railway/
+.render/
+Procfile.dev

@@ -21,30 +21,7 @@ except Exception as e:
     print(f"Hugging Face Hub failed: {e}")
     llm = None
 
-# Option 2: Try local transformers if HF Hub failed
-if llm is None:
-    try:
-        from transformers import pipeline
-        from langchain_community.llms import HuggingFacePipeline
-        
-        # Create a local text generation pipeline (completely free)
-        text_generation = pipeline(
-            "text-generation",
-            model="microsoft/DialoGPT-small",  # Smaller model for faster inference
-            tokenizer="microsoft/DialoGPT-small",
-            max_length=512,
-            temperature=0.7,
-            do_sample=True,
-            device=-1  # Use CPU (set to 0 for GPU if available)
-        )
-        
-        llm = HuggingFacePipeline(pipeline=text_generation)
-        print("Using local Transformers LLM")
-    except Exception as e:
-        print(f"Local transformers failed: {e}")
-        llm = None
-
-# Option 3: Enhanced rule-based system (always works)
+# Option 2: Enhanced rule-based system (always works)
 if llm is None:
     class EnhancedFinancialLLM:
         def __call__(self, prompt):
