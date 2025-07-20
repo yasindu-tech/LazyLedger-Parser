@@ -13,8 +13,7 @@ try:
     if hf_token:
         llm = HuggingFaceEndpoint(
             repo_id="microsoft/DialoGPT-medium",  # Free model
-            temperature=0.7,
-            max_length=512,
+            model_kwargs={"temperature": 0.7, "max_length": 512},
             huggingfacehub_api_token=hf_token
         )
         print("Using Hugging Face Endpoint LLM")
@@ -164,7 +163,12 @@ if hasattr(llm, '__call__'):
                 Monthly Totals: {data['monthly_totals']}
                 """
             
-            content = llm(prompt_text)
+            try:
+                # Use the new invoke method instead of deprecated __call__
+                content = llm.invoke(prompt_text)
+            except AttributeError:
+                # Fallback for custom LLM classes that don't have invoke
+                content = llm(prompt_text)
             
             class Response:
                 def __init__(self, content):
