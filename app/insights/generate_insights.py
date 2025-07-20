@@ -2,6 +2,60 @@ from .. import db
 from sqlalchemy import text
 from .insights_chain import insight_chain  # Import the LangChain pipeline
 import json
+from datetime import datetime
+
+
+def store_insight(user_id, title, content):
+    """Store generated insight in the insights table"""
+    try:
+        query = text("""
+            INSERT INTO insights (user_id, title, content, created_at)
+            VALUES (:user_id, :title, :content, :created_at)
+            RETURNING insight_id
+        """)
+        
+        result = db.session.execute(query, {
+            'user_id': user_id,
+            'title': title,
+            'content': content,
+            'created_at': datetime.utcnow()
+        })
+        
+        insight_id = result.fetchone()[0]
+        db.session.commit()
+        
+        return insight_id
+    except Exception as e:
+        db.session.rollback()
+        return f"Error storing insight: {str(e)}"
+
+
+def get_latest_insight(user_id):
+    """Get the latest insight for a user"""
+    try:
+        query = text("""
+            SELECT insight_id, user_id, title, content, created_at
+            FROM insights 
+            WHERE user_id = :user_id 
+            ORDER BY created_at DESC
+            LIMIT 1
+        """)
+        
+        result = db.session.execute(query, {'user_id': user_id})
+        row = result.fetchone()
+        
+        if not row:
+            return None
+            
+        return {
+            'insight_id': row.insight_id,
+            'user_id': row.user_id,
+            'title': row.title,
+            'content': row.content,
+            'created_at': row.created_at.isoformat() if row.created_at else None
+        }
+    except Exception as e:
+        return f"Error fetching latest insight: {str(e)}"
 
 
 def get_transactions(user_id):
@@ -114,6 +168,16 @@ def generate_insights(user_id):
             "weekly_totals": json.dumps(stats['weekly_totals']),
             "monthly_totals": json.dumps(stats['monthly_totals']),
         })
+        
+        # Generate a title for the insight
+        title = f"Financial Analysis - {datetime.utcnow().strftime('%Y-%m-%d')}"
+        
+        # Store the insight in the database
+        insight_id = store_insight(user_id, title, response.content)
+        
+        if isinstance(insight_id, str) and insight_id.startswith("Error"):
+            # If storage failed, still return the insight content
+            print(f"Warning: {insight_id}")
         
         # Return the LLM's generated content
         return response.content  # or response['content'] if using older LangChain
