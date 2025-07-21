@@ -131,6 +131,7 @@ try:
     - Category-specific recommendations with percentages
     - Cash flow management
     - Financial goal suggestions
+    - Do not add specific currency symbols, just use numbers
 
     Format your response clearly with Summary and numbered Insights.
     """)
