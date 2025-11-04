@@ -28,6 +28,9 @@ def create_app():
     # Import and register the extraction blueprint
     from .api.parser import parser as parser_blueprint
     app.register_blueprint(parser_blueprint)
+    # Import and register raw-records blueprint (create endpoint that inserts raw entries and transactions)
+    from .api.raw_records import raw_bp as raw_records_bp
+    app.register_blueprint(raw_records_bp)
     
     # Import and register the transactions blueprint
     from .api.transactions import transactions_bp
