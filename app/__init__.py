@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
@@ -11,12 +11,36 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
     
-    # Enable CORS for all domains and routes
-    CORS(app, origins=[
-        "https://lazy-ledger-frontend.vercel.app",
-        "http://localhost:3000",  # For local development
-        "http://127.0.0.1:3000"   # Alternative local address
-    ])
+    # Enable CORS for known origins and ensure preflight responses include headers
+    CORS(app,
+         resources={r"/*": {"origins": [
+             "https://lazy-ledger-frontend.vercel.app",
+             "http://localhost:3000",
+             "http://127.0.0.1:3000"
+         ]}},
+         supports_credentials=True,
+         allow_headers=["Content-Type", "Authorization", "X-Requested-With", "X-Request-Id"],
+         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    )
+
+    # Defensive fallback: ensure all responses include necessary CORS headers
+    @app.after_request
+    def add_cors_headers(response):
+        origin = request.headers.get('Origin')
+        allowed = [
+            "https://lazy-ledger-frontend.vercel.app",
+            "http://localhost:3000",
+            "http://127.0.0.1:3000"
+        ]
+        if origin and origin in allowed:
+            response.headers['Access-Control-Allow-Origin'] = origin
+            # Ensure caches vary by Origin
+            response.headers['Vary'] = 'Origin'
+        # Always expose these for clients that need them
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With, X-Request-Id'
+        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        return response
     
     # Configure the database URI from environment variables
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
